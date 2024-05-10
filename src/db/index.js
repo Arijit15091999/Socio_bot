@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import * as User from '../modules/user.js'
+import User from '../modules/user.js'
 
 function connectDB (connectionString) {
   return mongoose.connect(connectionString)
