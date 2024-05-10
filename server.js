@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv'
 import { connectDB, createAndUpdateUser } from './src/db/index.js'
 import { uploadChat, getChats } from './src/methods/chat.methods.js'
 import { getGroqChatCompletion } from './src/methods/groqAiMethods.js'
+import User from './src/modules/user.js'
 
 dotenv.config()
 
@@ -24,31 +25,48 @@ bot.hears('hi', async function (ctx) {
   console.log(ctx.update.message.from)
 })
 
+bot.command('generate', async function (ctx) {
+  const { message_id } = await ctx.reply('👍')
+  const from = ctx.update.message.from
+
+  // CAll Groq Ai for text generation
+
+  try {
+    const events = await getChats(from.id)
+
+    // console.log('events: ', events)
+
+    const chatCompletion = await getGroqChatCompletion(events)
+
+    User.findOneAndUpdate(
+      { userId: from.id },
+      {
+        $inc: {
+          prompt_tokens: chatCompletion.usage.prompt_tokens,
+          completion_tokens: chatCompletion.usage.completion_tokens
+        }
+      }
+    )
+
+    console.log(chatCompletion.choices[0].message.content + '')
+    bot.removeMessage(message_id)
+    await ctx.reply(chatCompletion.choices[0].message.content)
+  } catch (err) {
+    console.log(err)
+  }
+})
+
 // generate text
 bot.on(message('text'), async function (ctx) {
+  await ctx.reply('👍 ok keep me updated about your jobs...... ')
+
   const from = ctx.update.message.from
   const text = ctx.update.message.text
   // upload chat into the database
 
-  const response = await uploadChat({ userId: from.id, text });
+  await uploadChat({ userId: from.id, text })
 
-  // console.log(response)
-
-  // CAll Groq Ai for text generation
-
-  // const events = await getChats(from.id);
-
-  const chatCompletion = await getGroqChatCompletion([
-    {
-      id: 1,
-      text:"hey send me the code for binary Search in java"
-    }
-  ]);
-
-  console.log(chatCompletion.choices[0].message)
-
-  const {message_id} = await ctx.reply('Doing things..........')
-  console.log(message_id);
+  // console.log('response: ', response)
 })
 bot.on(message('sticker'), ctx => ctx.reply('👍'))
 bot.help(ctx => ctx.reply('Send me a sticker'))
@@ -65,7 +83,3 @@ bot.launch(async function () {
 // // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'))
 process.once('SIGTERM', () => bot.stop('SIGTERM'))
-
-
-
-

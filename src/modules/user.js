@@ -26,11 +26,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: false
     },
-    prompt_token: {
+    prompt_tokens: {
       type: Number,
       required: false
     },
-    completion_token: {
+    completion_tokens: {
       type: Number,
       required: false
     }
