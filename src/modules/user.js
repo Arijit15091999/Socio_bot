@@ -24,7 +24,15 @@ const userSchema = new mongoose.Schema(
 
     language_code: {
       type: String,
-      required: false,
+      required: false
+    },
+    prompt_token: {
+      type: Number,
+      required: false
+    },
+    completion_token: {
+      type: Number,
+      required: false
     }
   },
   { timestamps: true }
@@ -41,4 +49,3 @@ const userSchema = new mongoose.Schema(
 const User = mongoose.model('User', userSchema)
 
 export default User
-
