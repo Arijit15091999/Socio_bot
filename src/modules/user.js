@@ -25,14 +25,6 @@ const userSchema = new mongoose.Schema(
     language_code: {
       type: String,
       required: false
-    },
-    prompt_tokens: {
-      type: Number,
-      required: false
-    },
-    completion_tokens: {
-      type: Number,
-      required: false
     }
   },
   { timestamps: true }

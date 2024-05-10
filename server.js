@@ -26,7 +26,6 @@ bot.hears('hi', async function (ctx) {
 })
 
 bot.command('generate', async function (ctx) {
-  const { message_id } = await ctx.reply('👍')
   const from = ctx.update.message.from
 
   // CAll Groq Ai for text generation
@@ -38,19 +37,8 @@ bot.command('generate', async function (ctx) {
 
     const chatCompletion = await getGroqChatCompletion(events)
 
-    User.findOneAndUpdate(
-      { userId: from.id },
-      {
-        $inc: {
-          prompt_tokens: chatCompletion.usage.prompt_tokens,
-          completion_tokens: chatCompletion.usage.completion_tokens
-        }
-      }
-    )
-
     console.log(chatCompletion.choices[0].message.content + '')
-    bot.removeMessage(message_id)
-    await ctx.reply(chatCompletion.choices[0].message.content)
+    await ctx.reply(chatCompletion.choices[0].message.content || "no result")
   } catch (err) {
     console.log(err)
   }
