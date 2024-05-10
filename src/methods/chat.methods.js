@@ -5,7 +5,7 @@ function uploadChat (chat) {
 }
 
 function getChats (userId) {
-  Chat.find({ userId: userId }).then((events) => {console.log(events)})
+  return Chat.find({ userId: userId })
 
 }
 

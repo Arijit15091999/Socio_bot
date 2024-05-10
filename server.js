@@ -9,49 +9,49 @@ dotenv.config()
 
 const bot = new Telegraf(process.env.BOT_TOKEN)
 
-// bot.start(async function (ctx) {
-//   //   console.log(ctx)
-//   const from = ctx.update.message.from
-//   const user = await createAndUpdateUser(from)
-//   console.log(user)
-//   await ctx.reply(
-//     'Welcome to Social bot give me a note and I will create post for your Facebook Instagram and Linkedin'
-//   )
-// })
+bot.start(async function (ctx) {
+  //   console.log(ctx)
+  const from = ctx.update.message.from
+  const user = await createAndUpdateUser(from)
+  console.log(user)
+  await ctx.reply(
+    'Welcome to Social bot give me a note and I will create post for your Facebook Instagram and Linkedin'
+  )
+})
 
-// bot.hears('hi', async function (ctx) {
-//   await ctx.reply('Hey there')
-//   console.log(ctx.update.message.from)
-// })
+bot.hears('hi', async function (ctx) {
+  await ctx.reply('Hey there')
+  console.log(ctx.update.message.from)
+})
 
-// // generate text
-// bot.on(message('text'), async function (ctx) {
-//   const from = ctx.update.message.from
-//   const text = ctx.update.message.text
-//   // upload chat into the database
+// generate text
+bot.on(message('text'), async function (ctx) {
+  const from = ctx.update.message.from
+  const text = ctx.update.message.text
+  // upload chat into the database
 
-//   const response = await uploadChat({ userId: from.id, text });
+  const response = await uploadChat({ userId: from.id, text });
 
-//   // console.log(response)
+  // console.log(response)
 
-//   // CAll Groq Ai for text generation
+  // CAll Groq Ai for text generation
 
-//   // const events = await getChats(from.id);
+  // const events = await getChats(from.id);
 
-//   const chatCompletion = await getGroqChatCompletion([
-//     {
-//       id: 1,
-//       text:"hey send me the code for binary Search in java"
-//     }
-//   ]);
+  const chatCompletion = await getGroqChatCompletion([
+    {
+      id: 1,
+      text:"hey send me the code for binary Search in java"
+    }
+  ]);
 
-//   console.log(chatCompletion.choices[0].message)
+  console.log(chatCompletion.choices[0].message)
 
-//   const {message_id} = await ctx.reply('Doing things..........')
-//   console.log(message_id);
-// })
-// bot.on(message('sticker'), ctx => ctx.reply('👍'))
-// bot.help(ctx => ctx.reply('Send me a sticker'))
+  const {message_id} = await ctx.reply('Doing things..........')
+  console.log(message_id);
+})
+bot.on(message('sticker'), ctx => ctx.reply('👍'))
+bot.help(ctx => ctx.reply('Send me a sticker'))
 
 bot.launch(async function () {
   try {
@@ -66,9 +66,6 @@ bot.launch(async function () {
 process.once('SIGINT', () => bot.stop('SIGINT'))
 process.once('SIGTERM', () => bot.stop('SIGTERM'))
 
-const userId = '6902438415'
 
-// Find all chats for the specific user
 
-getChats(userId);
 
